@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: freelancer-db
+      MYSQL_USER: user1
+      MYSQL_PASSWORD: password1
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - freelancer-network
+
+volumes:
+  db-data:
+
+networks:
+  freelancer-network:
