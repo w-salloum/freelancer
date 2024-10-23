@@ -1,5 +1,7 @@
 package com.home.freelancer.controller;
 
+import com.home.freelancer.dto.FreelancerRequest;
+import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.service.FreelancerService;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +19,8 @@ public class FreelancerController {
 
     // Create Freelancer
     @PostMapping
-    public Freelancer createFreelancer(@RequestBody Freelancer freelancer) {
-        return freelancerService.createFreelancer(freelancer);
+    public Freelancer createFreelancer(@RequestBody FreelancerRequest freelancerRequest) {
+        return freelancerService.createFreelancer(freelancerRequest);
     }
 
     // Get All Freelancers
@@ -29,10 +31,8 @@ public class FreelancerController {
 
     // Get Freelancer by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Freelancer> getFreelancerById(@PathVariable Long id) {
-        return freelancerService.getFreelancerById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<FreelancerResponse> getFreelancerById(@PathVariable Long id) {
+        return ResponseEntity.ok(freelancerService.getFreelancerById(id));
     }
 
     // Update Freelancer
