@@ -1,5 +1,7 @@
 version: '3.8'
+
 services:
+
   db:
     image: mysql:8.0
     container_name: mysql-container
@@ -30,3 +32,20 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     ports:
       - "9092:9092"
+
+  app:
+    image: freelancer-app
+    container_name: freelancer-app-container
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - kafka
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/freelancer-db
+      SPRING_DATASOURCE_USERNAME: user1
+      SPRING_DATASOURCE_PASSWORD: password1
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9092
