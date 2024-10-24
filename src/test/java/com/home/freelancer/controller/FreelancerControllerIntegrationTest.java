@@ -2,27 +2,41 @@ package com.home.freelancer.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.home.freelancer.dto.FreelancerRequest;
+import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.enums.Gender;
+import com.home.freelancer.event.FreelancerCreatedEvent;
 import com.home.freelancer.repository.FreelancerRepository;
+import com.home.freelancer.service.EventService;
+import com.home.freelancer.service.FreelancerService;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@EmbeddedKafka(topics = "freelancer-created", partitions = 1)
+@Transactional
 class FreelancerControllerIntegrationTest {
 
     @Autowired
@@ -33,6 +47,10 @@ class FreelancerControllerIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private KafkaTemplate<String, Object> kafkaTemplate;
+
 
     @BeforeEach
     void setUp() {
@@ -49,12 +67,21 @@ class FreelancerControllerIntegrationTest {
         freelancerRequest.setGender(Gender.Male);
 
         // Act & Assert
-        mockMvc.perform(post("/api/freelancers")
+        MvcResult result = mockMvc.perform(post("/api/freelancers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(freelancerRequest)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("John"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Doe"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("Doe"))
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        FreelancerResponse freelancerResponse = objectMapper.readValue(responseContent, FreelancerResponse.class);
+
+        // Create the event that should have been published
+        FreelancerCreatedEvent event = new FreelancerCreatedEvent(freelancerResponse);
+
+        // Verify the KafkaTemplate interaction
+        Mockito.verify(kafkaTemplate).send(eq("freelancer-created"), eq(event));
     }
 
     @Test

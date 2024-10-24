@@ -7,6 +7,7 @@ import com.home.freelancer.exception.FreelancerNotFoundException;
 import com.home.freelancer.exception.InvalidFreelancerRequestException;
 import com.home.freelancer.mapper.FreelancerMapper;
 import com.home.freelancer.repository.FreelancerRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,10 +19,14 @@ public class FreelancerService {
 
     private final FreelancerRepository freelancerRepository;
     private final FreelancerMapper freelancerMapper;
+    private final EventService eventService;
 
-    public Freelancer createFreelancer(FreelancerRequest freelancerRequest) {
+    @Transactional
+    public FreelancerResponse createFreelancer(FreelancerRequest freelancerRequest) {
         validateFreelancerRequest(freelancerRequest);
-        return freelancerRepository.save(freelancerMapper.toFreelancer(freelancerRequest));
+        FreelancerResponse freelancer = freelancerMapper.toFreelancerResponse(freelancerRepository.save(freelancerMapper.toFreelancer(freelancerRequest)));
+        eventService.publishFreelancerCreatedEvent(freelancer);
+        return freelancer;
     }
 
     private void validateFreelancerRequest(FreelancerRequest freelancerRequest) {
@@ -48,18 +53,23 @@ public class FreelancerService {
         return freelancerMapper.toFreelancerResponse(freelancer);
     }
 
-    public Freelancer updateFreelancer(Long id, FreelancerRequest freelancerRequest) {
+    public FreelancerResponse updateFreelancer(Long id, FreelancerRequest freelancerRequest) {
         Freelancer freelancer = findFreelancerById(id);
         freelancer.setFirstName(freelancerRequest.getFirstName());
         freelancer.setLastName(freelancerRequest.getLastName());
         freelancer.setDateOfBirth(freelancerRequest.getDateOfBirth());
         freelancer.setGender(freelancerRequest.getGender());
-        return freelancerRepository.save(freelancer);
+        FreelancerResponse freelancerResponse = freelancerMapper.toFreelancerResponse(freelancerRepository.save(freelancer));
+        eventService.publishFreelancerUpdatedEvent(freelancerResponse);
+        return freelancerResponse;
     }
 
     public void deleteFreelancer(Long id) {
         //validate
-        findFreelancerById(id);
+        Freelancer freelancer = findFreelancerById(id);
+        FreelancerResponse freelancerResponse = freelancerMapper.toFreelancerResponse(freelancer);
+
+        eventService.publishFreelancerDeletedEvent(freelancerResponse);
         freelancerRepository.deleteById(id);
     }
 

@@ -34,6 +34,13 @@ dependencies {
 	// Lombok Dependency
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka:3.2.2'
+	testImplementation 'org.springframework.kafka:spring-kafka-test:3.2.2'
+	// Jackson Dependencies
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0' // Upgrade to 2.17.x
+	implementation 'com.fasterxml.jackson.module:jackson-module-scala_2.12:2.17.2' // Ensure compatibility with your Scala version
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

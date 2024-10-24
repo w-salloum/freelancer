@@ -5,6 +5,7 @@ import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.service.FreelancerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +20,9 @@ public class FreelancerController {
 
     // Create Freelancer
     @PostMapping
-    public Freelancer createFreelancer(@RequestBody FreelancerRequest freelancerRequest) {
-        return freelancerService.createFreelancer(freelancerRequest);
+    public ResponseEntity<FreelancerResponse> createFreelancer(@RequestBody FreelancerRequest freelancerRequest) {
+        FreelancerResponse response = freelancerService.createFreelancer(freelancerRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // Get All Freelancers
@@ -37,7 +39,7 @@ public class FreelancerController {
 
     // Update Freelancer
     @PutMapping("/{id}")
-    public ResponseEntity<Freelancer> updateFreelancer(@PathVariable Long id, @RequestBody FreelancerRequest freelancerRequest) {
+    public ResponseEntity<FreelancerResponse> updateFreelancer(@PathVariable Long id, @RequestBody FreelancerRequest freelancerRequest) {
         return ResponseEntity.ok(freelancerService.updateFreelancer(id, freelancerRequest));
     }
 

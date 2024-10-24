@@ -6,6 +6,7 @@ import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.enums.Gender;
 import com.home.freelancer.exception.InvalidFreelancerRequestException;
 import com.home.freelancer.mapper.FreelancerMapper;
+import com.home.freelancer.mapper.FreelancerMapperImpl;
 import com.home.freelancer.repository.FreelancerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class FreelancerServiceTest {
     @Mock
     private FreelancerMapper freelancerMapper;
 
+    @Mock
+    private EventService eventService;
+
     @InjectMocks
     private FreelancerService freelancerService;
 
@@ -49,11 +53,14 @@ class FreelancerServiceTest {
 
         Freelancer freelancer = new Freelancer();
         freelancer.setId(1L);
+        FreelancerResponse response = new FreelancerResponse();
+        response.setId(1L);
         when(freelancerMapper.toFreelancer(any(FreelancerRequest.class))).thenReturn(freelancer);
+        when(freelancerMapper.toFreelancerResponse(any(Freelancer.class))).thenReturn(response);
         when(freelancerRepository.save(any(Freelancer.class))).thenReturn(freelancer);
 
         // Act
-        Freelancer createdFreelancer = freelancerService.createFreelancer(request);
+        FreelancerResponse createdFreelancer = freelancerService.createFreelancer(request);
 
         // Assert
         assertNotNull(createdFreelancer);
@@ -138,8 +145,12 @@ class FreelancerServiceTest {
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
         request.setGender(Gender.Male);
 
+        FreelancerResponse response = new FreelancerResponse();
+        response.setId(1L);
+        when(freelancerMapper.toFreelancerResponse(any(Freelancer.class))).thenReturn(response);
+
         // Act
-        Freelancer updatedFreelancer = freelancerService.updateFreelancer(1L, request);
+        FreelancerResponse updatedFreelancer = freelancerService.updateFreelancer(1L, request);
 
         // Assert
         assertNotNull(updatedFreelancer);
