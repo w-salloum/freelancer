@@ -81,4 +81,11 @@ public class FreelancerService {
         return freelancerRepository.findById(id).orElseThrow(() -> new FreelancerNotFoundException("Freelancer not found"));
 
     }
+
+    public FreelancerResponse approveFreelancer(Long id) {
+        Freelancer freelancer = findFreelancerById(id);
+        freelancer.setStatus(Status.VERIFED);
+        FreelancerResponse freelancerResponse = freelancerMapper.toFreelancerResponse(freelancerRepository.save(freelancer));
+        return freelancerResponse;
+    }
 }

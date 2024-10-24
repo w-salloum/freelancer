@@ -168,4 +168,22 @@ class FreelancerControllerIntegrationTest {
         // Verify the freelancer has been deleted
         assertFalse(freelancerRepository.findById(freelancer.getId()).isPresent());
     }
+
+    @Test
+    void testApproveFreelancer_Success() throws Exception {
+        // Arrange
+        Freelancer freelancer = new Freelancer();
+        freelancer.setFirstName("Mark");
+        freelancer.setLastName("Taylor");
+        freelancer.setDateOfBirth(LocalDate.of(1980, 10, 10));
+        freelancer.setGender(Gender.MALE);
+        freelancer.setStatus(Status.NEW_FREELANCER);
+        freelancer = freelancerRepository.save(freelancer);
+
+        // Act & Assert
+        mockMvc.perform(put("/api/freelancers/{id}/approve", freelancer.getId()))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(Status.VERIFED.toString()));
+    }
+
 }

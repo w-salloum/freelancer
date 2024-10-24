@@ -49,4 +49,10 @@ public class FreelancerController {
         freelancerService.deleteFreelancer(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Approve Freelancer
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<FreelancerResponse> approveFreelancer(@PathVariable Long id) {
+        return ResponseEntity.ok(freelancerService.approveFreelancer(id));
+    }
 }

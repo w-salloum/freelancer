@@ -169,4 +169,24 @@ class FreelancerServiceTest {
         // Assert
         verify(freelancerRepository, times(1)).deleteById(1L);
     }
+
+    @Test
+    void testApproveFreelancer_Success() {
+        // Arrange
+        Freelancer freelancer = new Freelancer();
+        freelancer.setId(1L);
+        when(freelancerRepository.findById(1L)).thenReturn(Optional.of(freelancer));
+        when(freelancerRepository.save(any(Freelancer.class))).thenReturn(freelancer);
+
+        FreelancerResponse response = new FreelancerResponse();
+        response.setId(1L);
+        when(freelancerMapper.toFreelancerResponse(any(Freelancer.class))).thenReturn(response);
+
+        // Act
+        FreelancerResponse approvedFreelancer = freelancerService.approveFreelancer(1L);
+
+        // Assert
+        assertNotNull(approvedFreelancer);
+        verify(freelancerRepository, times(1)).save(any(Freelancer.class));
+    }
 }
