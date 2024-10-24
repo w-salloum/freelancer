@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface FreelancerMapper {
-   // FreelancerMapper INSTANCE = Mappers.getMapper(FreelancerMapper.class);
+   FreelancerMapper INSTANCE = Mappers.getMapper(FreelancerMapper.class);
 
     Freelancer toFreelancer(FreelancerRequest freelancerRequest);
     FreelancerResponse toFreelancerResponse(Freelancer freelancer);
