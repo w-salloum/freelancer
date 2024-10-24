@@ -37,8 +37,8 @@ public class FreelancerController {
 
     // Update Freelancer
     @PutMapping("/{id}")
-    public ResponseEntity<Freelancer> updateFreelancer(@PathVariable Long id, @RequestBody Freelancer freelancerDetails) {
-        return ResponseEntity.ok(freelancerService.updateFreelancer(id, freelancerDetails));
+    public ResponseEntity<Freelancer> updateFreelancer(@PathVariable Long id, @RequestBody FreelancerRequest freelancerRequest) {
+        return ResponseEntity.ok(freelancerService.updateFreelancer(id, freelancerRequest));
     }
 
     // Delete Freelancer

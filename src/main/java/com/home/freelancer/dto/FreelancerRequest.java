@@ -1,5 +1,6 @@
 package com.home.freelancer.dto;
 
+import com.home.freelancer.enums.Gender;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -10,5 +11,5 @@ public class FreelancerRequest {
     private String firstName;
     private String lastName;
     private LocalDate dateOfBirth;
-    private String gender;
+    private Gender gender;
 }
