@@ -14,6 +14,7 @@ services:
       - db-data:/var/lib/mysql
     networks:
       - freelancer-network
+
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     environment:
@@ -21,6 +22,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - freelancer-network
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -33,6 +36,21 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     ports:
       - "9092:9092"
+    networks:
+      - freelancer-network
+
+  freelancer-app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Ensure your Dockerfile is named 'Dockerfile'
+    depends_on:
+      - db
+      - kafka
+    ports:
+      - "8080:8080"
+    networks:
+      - freelancer-network
+
 volumes:
   db-data:
 

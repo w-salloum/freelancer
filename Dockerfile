@@ -1,11 +1,11 @@
 # Use an official JDK runtime as a parent image
-FROM openjdk:17-jdk-alpine
+FROM openjdk:21-jdk
 
 # Set the working directory in the container
 WORKDIR /app
 
 # Copy the application JAR file into the container
-COPY target/freelancer-0.0.1-SNAPSHOT.jar /app/freelancer.jar
+COPY build/libs/freelancer-0.0.1-SNAPSHOT.jar /app/freelancer.jar
 
 # Make port 8080 available to the world outside this container
 EXPOSE 8080
