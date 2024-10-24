@@ -1,6 +1,7 @@
 package com.home.freelancer.entity;
 
 import com.home.freelancer.enums.Gender;
+import com.home.freelancer.enums.Status;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,4 +23,7 @@ public class Freelancer {
     @Column(name = "gender", nullable = false)
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 }

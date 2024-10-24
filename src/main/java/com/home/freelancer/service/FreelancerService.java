@@ -3,6 +3,7 @@ package com.home.freelancer.service;
 import com.home.freelancer.dto.FreelancerRequest;
 import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
+import com.home.freelancer.enums.Status;
 import com.home.freelancer.exception.FreelancerNotFoundException;
 import com.home.freelancer.exception.InvalidFreelancerRequestException;
 import com.home.freelancer.mapper.FreelancerMapper;
@@ -24,9 +25,11 @@ public class FreelancerService {
     @Transactional
     public FreelancerResponse createFreelancer(FreelancerRequest freelancerRequest) {
         validateFreelancerRequest(freelancerRequest);
-        FreelancerResponse freelancer = freelancerMapper.toFreelancerResponse(freelancerRepository.save(freelancerMapper.toFreelancer(freelancerRequest)));
-        eventService.publishFreelancerCreatedEvent(freelancer);
-        return freelancer;
+        Freelancer freelancer = freelancerMapper.toFreelancer(freelancerRequest);
+        freelancer.setStatus(Status.NEW_FREELANCER);
+        FreelancerResponse freelancerResponse = freelancerMapper.toFreelancerResponse(freelancerRepository.save(freelancer));
+        eventService.publishFreelancerCreatedEvent(freelancerResponse);
+        return freelancerResponse;
     }
 
     private void validateFreelancerRequest(FreelancerRequest freelancerRequest) {

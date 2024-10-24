@@ -6,7 +6,6 @@ import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.enums.Gender;
 import com.home.freelancer.exception.InvalidFreelancerRequestException;
 import com.home.freelancer.mapper.FreelancerMapper;
-import com.home.freelancer.mapper.FreelancerMapperImpl;
 import com.home.freelancer.repository.FreelancerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +48,7 @@ class FreelancerServiceTest {
         request.setFirstName("John");
         request.setLastName("Doe");
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setGender(Gender.Male);
+        request.setGender(Gender.MALE);
 
         Freelancer freelancer = new Freelancer();
         freelancer.setId(1L);
@@ -74,7 +73,7 @@ class FreelancerServiceTest {
         FreelancerRequest request = new FreelancerRequest();
         request.setLastName("Doe");
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setGender(Gender.Male);
+        request.setGender(Gender.MALE);
 
         // Act & Assert
         InvalidFreelancerRequestException exception = assertThrows(InvalidFreelancerRequestException.class,
@@ -143,7 +142,7 @@ class FreelancerServiceTest {
         request.setFirstName("John");
         request.setLastName("Doe");
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setGender(Gender.Male);
+        request.setGender(Gender.MALE);
 
         FreelancerResponse response = new FreelancerResponse();
         response.setId(1L);

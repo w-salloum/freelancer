@@ -5,15 +5,12 @@ import com.home.freelancer.dto.FreelancerRequest;
 import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
 import com.home.freelancer.enums.Gender;
+import com.home.freelancer.enums.Status;
 import com.home.freelancer.event.FreelancerCreatedEvent;
 import com.home.freelancer.repository.FreelancerRepository;
-import com.home.freelancer.service.EventService;
-import com.home.freelancer.service.FreelancerService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -64,7 +61,7 @@ class FreelancerControllerIntegrationTest {
         freelancerRequest.setFirstName("John");
         freelancerRequest.setLastName("Doe");
         freelancerRequest.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        freelancerRequest.setGender(Gender.Male);
+        freelancerRequest.setGender(Gender.MALE);
 
         // Act & Assert
         MvcResult result = mockMvc.perform(post("/api/freelancers")
@@ -91,7 +88,8 @@ class FreelancerControllerIntegrationTest {
         freelancer.setFirstName("John");
         freelancer.setLastName("Doe");
         freelancer.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        freelancer.setGender(Gender.Male);
+        freelancer.setGender(Gender.MALE);
+        freelancer.setStatus(Status.NEW_FREELANCER);
         freelancerRepository.save(freelancer);
 
         // Act & Assert
@@ -108,7 +106,8 @@ class FreelancerControllerIntegrationTest {
         freelancer.setFirstName("Jane");
         freelancer.setLastName("Smith");
         freelancer.setDateOfBirth(LocalDate.of(1985, 5, 15));
-        freelancer.setGender(Gender.Female);
+        freelancer.setGender(Gender.FEMALE);
+        freelancer.setStatus(Status.NEW_FREELANCER);
         freelancer = freelancerRepository.save(freelancer);
 
         // Act & Assert
@@ -132,14 +131,15 @@ class FreelancerControllerIntegrationTest {
         freelancer.setFirstName("Jane");
         freelancer.setLastName("Smith");
         freelancer.setDateOfBirth(LocalDate.of(1985, 5, 15));
-        freelancer.setGender(Gender.Female);
+        freelancer.setGender(Gender.FEMALE);
+        freelancer.setStatus(Status.NEW_FREELANCER);
         freelancer = freelancerRepository.save(freelancer);
 
         FreelancerRequest updatedRequest = new FreelancerRequest();
         updatedRequest.setFirstName("Janet");
         updatedRequest.setLastName("Doe");
         updatedRequest.setDateOfBirth(LocalDate.of(1987, 7, 12));
-        updatedRequest.setGender(Gender.Female);
+        updatedRequest.setGender(Gender.FEMALE);
 
         // Act & Assert
         mockMvc.perform(put("/api/freelancers/{id}", freelancer.getId())
@@ -157,7 +157,8 @@ class FreelancerControllerIntegrationTest {
         freelancer.setFirstName("Mark");
         freelancer.setLastName("Taylor");
         freelancer.setDateOfBirth(LocalDate.of(1980, 10, 10));
-        freelancer.setGender(Gender.Male);
+        freelancer.setGender(Gender.MALE);
+        freelancer.setStatus(Status.NEW_FREELANCER);
         freelancer = freelancerRepository.save(freelancer);
 
         // Act & Assert

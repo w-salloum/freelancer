@@ -22,7 +22,7 @@ public class FreelancerMapperTest {
         freelancer.setFirstName("John");
         freelancer.setLastName("Doe");
         freelancer.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        freelancer.setGender(Gender.Male);
+        freelancer.setGender(Gender.MALE);
 
         FreelancerResponse response = mapper.toFreelancerResponse(freelancer);
 
@@ -38,7 +38,7 @@ public class FreelancerMapperTest {
         request.setFirstName("John");
         request.setLastName("Doe");
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
-        request.setGender(Gender.Male);
+        request.setGender(Gender.MALE);
         Freelancer freelancer = mapper.toFreelancer(request);
         assertEquals(request.getId(), freelancer.getId());
         assertEquals(request.getFirstName(), freelancer.getFirstName());
