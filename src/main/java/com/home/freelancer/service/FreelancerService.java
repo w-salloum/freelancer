@@ -3,6 +3,7 @@ package com.home.freelancer.service;
 import com.home.freelancer.dto.FreelancerRequest;
 import com.home.freelancer.dto.FreelancerResponse;
 import com.home.freelancer.entity.Freelancer;
+import com.home.freelancer.exception.FreelancerNotFoundException;
 import com.home.freelancer.exception.InvalidFreelancerRequestException;
 import com.home.freelancer.mapper.FreelancerMapper;
 import com.home.freelancer.repository.FreelancerRepository;
@@ -64,7 +65,7 @@ public class FreelancerService {
 
     // find by id, and throw exception if not found
     private Freelancer findFreelancerById(Long id) {
-        return freelancerRepository.findById(id).orElseThrow(() -> new RuntimeException("Freelancer not found"));
+        return freelancerRepository.findById(id).orElseThrow(() -> new FreelancerNotFoundException("Freelancer not found"));
 
     }
 }
